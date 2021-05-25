@@ -14,6 +14,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import Score.ScoreUpdaterFacade;
+
 public class Cribbage extends CardGame {
 	static Cribbage cribbage;  // Provide access to singleton
 
@@ -225,11 +227,14 @@ class Segment {
 }
 
 private void play() {
+	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	final int thirtyone = 31;
+	final int FIFTEEN = 15;
 	List<Hand> segments = new ArrayList<>();
 	int currentPlayer = 0; // Player 1 is dealer
 	Segment s = new Segment();
 	s.reset(segments);
+	
 	while (!(players[0].emptyHand() && players[1].emptyHand())) {
 		// System.out.println("segments.size() = " + segments.size());
 		Card nextCard = players[currentPlayer].lay(thirtyone-total(s.segment));
@@ -237,7 +242,9 @@ private void play() {
 			if (s.go) {
 				// Another "go" after previous one with no intervening cards
 				// lastPlayer gets 1 point for a "go"
+				scores[s.lastPlayer] += 1;
 				s.newSegment = true;
+				updateScore(s.lastPlayer);
 			} else {
 				// currentPlayer says "go"
 				s.go = true;
@@ -248,16 +255,32 @@ private void play() {
 			transfer(nextCard, s.segment);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
+				scores[s.lastPlayer] += 2;
+				updateScore(s.lastPlayer);
 				s.newSegment = true;
 				currentPlayer = (currentPlayer+1) % 2;
 			} else {
 				// if total(segment) == 15, lastPlayer gets 2 points for a 15
+				if(total(s.segment) == FIFTEEN) {
+					scores[s.lastPlayer] += 2;
+					updateScore(s.lastPlayer);
+				}
 				if (!s.go) { // if it is "go" then same player gets another turn
 					currentPlayer = (currentPlayer+1) % 2;
 				}
 			}
+			/* apply rules of play */
+			for(int i = 0; i < nPlayers; i++) {
+				scores[s.lastPlayer] += facade.getPlayScore(players[i].getHand(), null, nextCard);
+				updateScore(i);
+			}
+//			int n = facade.getPlayScore();
 		}
+		/* get score from the factory */
+		
+		
 		if (s.newSegment) {
+			
 			segments.add(s.segment);
 			s.reset(segments);
 		}
@@ -269,6 +292,15 @@ void showHandsCrib() {
 	// score player 0 (non dealer)
 	// score player 1 (dealer)
 	// score crib (for dealer)
+	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
+	for(int i = 0; i < nPlayers; i++) {
+		if(i == 0) {
+			scores[i] += facade.getShowScore(players[i].getHand(), crib, starter.getFirst());
+		} else {
+			scores[i] += facade.getShowScore(players[i].getHand(), crib, starter.getFirst());
+		}
+		updateScore(i);
+	}
 }
 
   public Cribbage()
