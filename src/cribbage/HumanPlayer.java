@@ -41,5 +41,8 @@ public class HumanPlayer extends IPlayer {
 			return selected;
 		}
 	}
+	public Hand getHand() {
+		return hand;
+	}
 
 }

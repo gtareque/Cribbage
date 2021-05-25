@@ -1,7 +1,8 @@
 package cribbage;
 
 import ch.aplu.jcardgame.Card;
-// import ch.aplu.jcardgame.Hand;
+ import ch.aplu.jcardgame.Hand;
+
 
 public class RandomPlayer extends IPlayer {
 
@@ -14,5 +15,8 @@ public class RandomPlayer extends IPlayer {
 	Card selectToLay() {
 		return hand.isEmpty() ? null : Cribbage.randomCard(hand);
 	}
-
+   
+	public Hand getHand() {
+		return hand;
+	}
 }
