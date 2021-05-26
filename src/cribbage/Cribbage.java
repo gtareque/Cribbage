@@ -253,7 +253,7 @@ private void play() {
 		} else {
 			s.lastPlayer = currentPlayer; // last Player to play a card in this segment
 			transfer(nextCard, s.segment);
-			scores[s.lastPlayer] += facade.getPlayScore(s.segment, null, null);
+			scores[s.lastPlayer] += facade.getPlayScore(s.segment, null);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
 				scores[s.lastPlayer] += 2;
@@ -296,12 +296,15 @@ void showHandsCrib() {
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	for(int i = 0; i < nPlayers; i++) {
 		if(i == 0) {
-			scores[i] += facade.getShowScore(players[i].getHand(), crib, starter.getFirst());
+			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst());
 		} else {
-			scores[i] += facade.getShowScore(players[i].getHand(), crib, starter.getFirst());
+			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst());
 		}
 		updateScore(i);
 	}
+	
+	scores[1] += facade.getShowScore(crib, starter.getFirst());
+	updateScore(1);
 }
 
   public Cribbage()
