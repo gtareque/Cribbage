@@ -253,6 +253,7 @@ private void play() {
 		} else {
 			s.lastPlayer = currentPlayer; // last Player to play a card in this segment
 			transfer(nextCard, s.segment);
+			scores[s.lastPlayer] += facade.getPlayScore(s.segment, null, null);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
 				scores[s.lastPlayer] += 2;
@@ -270,10 +271,10 @@ private void play() {
 				}
 			}
 			/* apply rules of play */
-			for(int i = 0; i < nPlayers; i++) {
-				scores[s.lastPlayer] += facade.getPlayScore(players[i].getHand(), null, nextCard);
-				updateScore(i);
-			}
+//			for(int i = 0; i < nPlayers; i++) {
+//				scores[s.lastPlayer] += facade.getPlayScore(players[i].getHand(), null, nextCard);
+//				updateScore(i);
+//			}
 //			int n = facade.getPlayScore();
 		}
 		/* get score from the factory */
