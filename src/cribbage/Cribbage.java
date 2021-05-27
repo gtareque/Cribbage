@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import Score.ScoreUpdaterFacade;
+import Score.*;
 
 public class Cribbage extends CardGame {
 	static Cribbage cribbage;  // Provide access to singleton
@@ -128,6 +129,7 @@ public class Cribbage extends CardGame {
   private final Actor[] scoreActors = {null, null}; //, null, null };
   private final Location textLocation = new Location(350, 450);
   private final Hand[] hands = new Hand[nPlayers];
+  private final Hand[] startingHands = new Hand[nPlayers];
   private Hand starter;
   private Hand crib;
 
@@ -199,9 +201,13 @@ private void starter(Hand pack) {
 	layout.setRotationAngle(0);
 	starter.setView(this, layout);
 	starter.draw();
+	
 	Card dealt = randomCard(pack);
 	dealt.setVerso(false);
 	transfer(dealt, starter);
+	for (Card c: starter.getCardList()) {
+		System.out.println(c.getRankId());
+	}
 }
 
 int total(Hand hand) {
@@ -226,6 +232,14 @@ class Segment {
 		}
 }
 
+void cloneHand() {
+	for (int i = 0; i < nPlayers; i++) {
+		  startingHands[i] = new Hand(deck);
+		  for (Card C: hands[i].getCardList()) {
+			  startingHands[i].insert(C.getSuit(), C.getRank(), false);
+		  }
+	  }
+}
 private void play() {
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	final int thirtyone = 31;
@@ -294,6 +308,7 @@ void showHandsCrib() {
 	// score player 1 (dealer)
 	// score crib (for dealer)
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
+	Runs run = new Runs();
 	for(int i = 0; i < nPlayers; i++) {
 		if(i == 0) {
 			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst());
@@ -302,9 +317,19 @@ void showHandsCrib() {
 		}
 		updateScore(i);
 	}
+<<<<<<< Updated upstream
 	
 	scores[1] += facade.getShowScore(crib, starter.getFirst());
 	updateScore(1);
+=======
+<<<<<<< Updated upstream
+=======
+	
+	System.out.println("sum: "+run.getScore(startingHands[0], starter.getFirst()));
+	scores[1] += facade.getShowScore(crib, starter.getFirst());
+	updateScore(1);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 }
 
   public Cribbage()
@@ -327,9 +352,10 @@ void showHandsCrib() {
 	  deal(pack, hands);
 	  discardToCrib();
 	  starter(pack);
+	  cloneHand();
 	  play();
 	  showHandsCrib();
-
+	  
     addActor(new Actor("sprites/gameover.gif"), textLocation);
     setStatusText("Game over.");
     refresh();
@@ -377,6 +403,9 @@ void showHandsCrib() {
 	  // End properties
 
 	  new Cribbage();
+	  
+	  
+	  
   }
 
 }

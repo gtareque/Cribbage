@@ -9,24 +9,28 @@ public class Pairs implements ScoringStrategy {
 	public int getScore(Hand hand, Card card) {
 		int score = 0;
 		// TODO Auto-generated method stub
-		Hand[] pairs = hand.extractPairs();
-		Hand[] trips = hand.extractTrips();
-		Hand[] quads = hand.extractQuads();
 		
-		if (quads.length != 0) {
-			for(int i = 0; i < pairs.length; i++) {
-				score += QUADS;
+		if (card == null) {
+			Hand[] pairs = hand.extractPairs();
+			Hand[] trips = hand.extractTrips();
+			Hand[] quads = hand.extractQuads();
+			
+			if (quads.length != 0) {
+				for(int i = 0; i < pairs.length; i++) {
+					score += QUADS;
+				}
 			}
-		}
-		else if (trips.length != 0) {
-			for(int i = 0; i < pairs.length; i++) {
-				score += TRIPS;
+			else if (trips.length != 0) {
+				for(int i = 0; i < pairs.length; i++) {
+					score += TRIPS;
+				}
 			}
-		}
-		else if (pairs.length != 0) {
-			for(int i = 0; i < pairs.length; i++) {
-				score += PAIRS;
+			else if (pairs.length != 0) {
+				for(int i = 0; i < pairs.length; i++) {
+					score += PAIRS;
+				}
 			}
+			
 		}
 		
 		return score;
