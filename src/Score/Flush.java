@@ -5,8 +5,8 @@ import ch.aplu.jcardgame.*;
 import cribbage.Cribbage.*;
 
 public class Flush implements ScoringStrategy {
-	final int FFOUR = 4;
-	final int FFIVE = 5;
+	private static final int FFOUR = 4;
+	private static final int FFIVE = 5;
 	
 	@Override
 	public int getScore(Hand hand, Card card) {

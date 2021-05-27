@@ -53,6 +53,31 @@ public class Pairs implements ScoringStrategy {
 				prevrank = rank;
 				
 			}
+			
+		} else {
+			
+			hand.insert(card, false);
+
+			Hand[] quad = hand.extractQuads();
+			Hand[] trip = hand.extractTrips();
+			Hand[] pair = hand.extractPairs();
+			
+			if (quad.length != 0) {
+				for(int i = 0; i < quad.length; i++) {
+					score += QUADS;
+				}
+			}
+			else if (trip.length != 0) {
+				for(int i = 0; i < trip.length; i++) {
+					score += TRIPS;
+				}
+			}
+			else if (pair.length != 0) {
+				for(int i = 0; i < pair.length; i++) {
+					score += PAIRS;
+				}
+			}
+
 		}
 		
 		return score;

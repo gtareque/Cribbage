@@ -308,26 +308,20 @@ void showHandsCrib() {
 	// score player 0 (non dealer)
 	// score player 1 (dealer)
 	// score crib (for dealer)
-	/*
+	
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	Runs run = new Runs();
 	for(int i = 0; i < nPlayers; i++) {
 		if(i == 0) {
-			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst());
+			scores[i] += facade.getShowScore(startingHands[i], starter.getFirst());
 		} else {
-			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst());
+			scores[i] += facade.getShowScore(startingHands[i], starter.getFirst());
 		}
 		updateScore(i);
 	}
-
-	scores[1] += facade.getShowScore(crib, starter.getFirst());
-	updateScore(1);
-
 	
-	System.out.println("sum: "+run.getScore(startingHands[0], starter.getFirst()));
 	scores[1] += facade.getShowScore(crib, starter.getFirst());
 	updateScore(1);
-	*/
 }
 
   public Cribbage()

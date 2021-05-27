@@ -5,12 +5,12 @@ import ch.aplu.jcardgame.*;
 import cribbage.Cribbage.Rank;
 
 public class Jack implements ScoringStrategy {
+	private static final Rank r = Rank.JACK;
 
 	@Override
 	public int getScore(Hand hand, Card card) {
 		// TODO Auto-generated method stub
 		int points = 0;
-		Rank r = Rank.JACK;
 		
 		if (card == null) {
 			
