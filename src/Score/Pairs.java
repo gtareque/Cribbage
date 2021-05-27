@@ -72,7 +72,11 @@ public class Pairs implements ScoringStrategy {
 					break;
 				}
 			}
-			if()
+			if(num == 2 || num == 3) {
+				score = num *2;
+			} else {
+				score = 12;
+			}
 			score = num * 2;
 			total += score;
 			if(score > 0 ) {
