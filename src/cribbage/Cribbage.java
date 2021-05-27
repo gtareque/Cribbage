@@ -4,6 +4,8 @@ package cribbage;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
+import cribbage.Cribbage.Rank;
+import cribbage.Cribbage.Suit;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -14,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import Log.Log;
 import Score.ScoreUpdaterFacade;
 
 public class Cribbage extends CardGame {
@@ -33,37 +36,18 @@ public class Cribbage extends CardGame {
 			this.value = value;
 		}
 	}
+	class MyCardValues implements Deck.CardValues { // Need to generate a unique value for every card
+		public int[] values(Enum suit) {  // Returns the value for each card in the suit
+			return Stream.of(Rank.values()).mapToInt(r -> (((Rank) r).order-1)*(Suit.values().length)+suit.ordinal()).toArray();
+		}
+	}
 
 	static int cardValue(Card c) { return ((Cribbage.Rank) c.getRank()).value; }
 
 	/*
 	Canonical String representations of Suit, Rank, Card, and Hand
 	*/
-	String canonical(Suit s) { return s.toString().substring(0, 1); }
-
-	String canonical(Rank r) {
-		switch (r) {
-			case ACE:case KING:case QUEEN:case JACK:case TEN:
-				return r.toString().substring(0, 1);
-			default:
-				return String.valueOf(r.value);
-		}
-	}
-
-    String canonical(Card c) { return canonical((Rank) c.getRank()) + canonical((Suit) c.getSuit()); }
-
-    String canonical(Hand h) {
-		Hand h1 = new Hand(deck); // Clone to sort without changing the original hand
-		for (Card C: h.getCardList()) h1.insert(C.getSuit(), C.getRank(), false);
-		h1.sort(Hand.SortType.POINTPRIORITY, false);
-		return "[" + h1.getCardList().stream().map(this::canonical).collect(Collectors.joining(",")) + "]";
-    }
-
-	class MyCardValues implements Deck.CardValues { // Need to generate a unique value for every card
-		public int[] values(Enum suit) {  // Returns the value for each card in the suit
-			return Stream.of(Rank.values()).mapToInt(r -> (((Rank) r).order-1)*(Suit.values().length)+suit.ordinal()).toArray();
-		}
-	}
+	
 
 	static Random random;
 
@@ -73,6 +57,7 @@ public class Cribbage extends CardGame {
   }
 
 	static boolean ANIMATE;
+	private static final int DEALER = 0;
 
 	void transfer(Card c, Hand h) {
 		if (ANIMATE) {
@@ -130,7 +115,7 @@ public class Cribbage extends CardGame {
   private final Hand[] hands = new Hand[nPlayers];
   private Hand starter;
   private Hand crib;
-
+  
   public static void setStatus(String string) { cribbage.setStatusText(string); }
 
 static private final IPlayer[] players = new IPlayer[nPlayers];
@@ -180,16 +165,30 @@ private void deal(Hand pack, Hand[] hands) {
 
 private void discardToCrib() {
 	crib = new Hand(deck);
+	
+	Card temp;
 	RowLayout layout = new RowLayout(cribLocation, cribWidth);
 	layout.setRotationAngle(0);
 	crib.setView(this, layout);
 	// crib.setTargetArea(cribTarget);
 	crib.draw();
+	Log log = Log.getInstance();
 	for (IPlayer player: players) {
+		
+		Hand tempHand = new Hand(deck);
 		for (int i = 0; i < nDiscards; i++) {
-			transfer(player.discard(), crib);
+			
+			temp = player.discard();
+			
+			transfer(temp.clone(), tempHand);
+			transfer(temp, crib);
 		}
+//		tempCrib.sort(Deck.cards);;
+//		
+		tempHand.sort(Hand.SortType.POINTPRIORITY, true);
+		log.logCrib(tempHand, nPlayers);
 		crib.sort(Hand.SortType.POINTPRIORITY, true);
+		
 	}
 }
 
@@ -234,9 +233,11 @@ private void play() {
 	int currentPlayer = 0; // Player 1 is dealer
 	Segment s = new Segment();
 	s.reset(segments);
-	
+	Log log = Log.getInstance();
+	log.setPlayType(true);
 	while (!(players[0].emptyHand() && players[1].emptyHand())) {
 		// System.out.println("segments.size() = " + segments.size());
+		log.setCurrentPlayer(currentPlayer);
 		Card nextCard = players[currentPlayer].lay(thirtyone-total(s.segment));
 		if (nextCard == null) {
 			if (s.go) {
@@ -251,8 +252,10 @@ private void play() {
 			}
 			currentPlayer = (currentPlayer+1) % 2;
 		} else {
+			
 			s.lastPlayer = currentPlayer; // last Player to play a card in this segment
 			transfer(nextCard, s.segment);
+			scores[s.lastPlayer] = facade.getPlayScore(s.segment, null, scores[s.lastPlayer]);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
 				scores[s.lastPlayer] += 2;
@@ -269,12 +272,7 @@ private void play() {
 					currentPlayer = (currentPlayer+1) % 2;
 				}
 			}
-			/* apply rules of play */
-			for(int i = 0; i < nPlayers; i++) {
-				scores[s.lastPlayer] += facade.getPlayScore(players[i].getHand(), null, nextCard);
-				updateScore(i);
-			}
-//			int n = facade.getPlayScore();
+
 		}
 		/* get score from the factory */
 		
@@ -285,19 +283,22 @@ private void play() {
 			s.reset(segments);
 		}
 	}
-
 }
 
 void showHandsCrib() {
 	// score player 0 (non dealer)
 	// score player 1 (dealer)
 	// score crib (for dealer)
+	Log log = Log.getInstance();
+	log.setPlayType(false);
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	for(int i = 0; i < nPlayers; i++) {
+		log.setCurrentPlayer(i);
 		if(i == 0) {
-			scores[i] += facade.getShowScore(players[i].getHand(), crib, starter.getFirst());
+			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
+			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
 		} else {
-			scores[i] += facade.getShowScore(players[i].getHand(), crib, starter.getFirst());
+			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
 		}
 		updateScore(i);
 	}
@@ -305,10 +306,16 @@ void showHandsCrib() {
 
   public Cribbage()
   {
+	
+	  
     super(850, 700, 30);
+    
     cribbage = this;
+    
     setTitle("Cribbage (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
     setStatusText("Initializing...");
+    Log log = Log.getInstance();
+    log.setDeck(deck);
     initScore();
 
 	  Hand pack = deck.toHand(false);
@@ -320,9 +327,15 @@ void showHandsCrib() {
 	  addActor(new TextActor("Seed: " + SEED, Color.BLACK, bgColor, normalFont), seedLocation);
 
 	  /* Play the round */
+	  
+	  
 	  deal(pack, hands);
+	  for(int i = 0; i< hands.length; i ++) {
+		  log.logCardsDealt(hands[i], i);
+	  }
 	  discardToCrib();
 	  starter(pack);
+	  log.logStarter(pack.getFirst());
 	  play();
 	  showHandsCrib();
 
@@ -371,7 +384,8 @@ void showHandsCrib() {
 	  clazz = Class.forName(cribbageProperties.getProperty("Player1"));
 	  players[1] = (IPlayer) clazz.getConstructor().newInstance();
 	  // End properties
-
+	  Log log = Log.getInstance();
+	  log.logPlayers(cribbageProperties);
 	  new Cribbage();
   }
 

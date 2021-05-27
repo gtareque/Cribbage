@@ -3,11 +3,12 @@ package Score;
 public class ScoringStrategyFactory {
 	public ScoringStrategy getScoringStrategy(String type) {
 		
-		ScoringStrategy composite = new StrategyComposite();
+		StrategyComposite composite = new StrategyComposite();
 		
 		switch (type) {
 			case "PLAY":
 				/* add the strategies to component */ 
+				composite.addStrategy(new Pairs());
 				
 				break;
 			case "SHOW":
