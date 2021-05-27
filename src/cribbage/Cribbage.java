@@ -292,8 +292,9 @@ private void play() {
 //			int n = facade.getPlayScore();
 		}
 		/* get score from the factory */
-		
-		
+		System.out.println("test");
+		Pairs pair = new Pairs();
+		System.out.println("Sum: "+pair.getScore(s.segment, null));
 		if (s.newSegment) {
 			
 			segments.add(s.segment);
@@ -307,6 +308,7 @@ void showHandsCrib() {
 	// score player 0 (non dealer)
 	// score player 1 (dealer)
 	// score crib (for dealer)
+	/*
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	Runs run = new Runs();
 	for(int i = 0; i < nPlayers; i++) {
@@ -317,19 +319,15 @@ void showHandsCrib() {
 		}
 		updateScore(i);
 	}
-<<<<<<< Updated upstream
-	
+
 	scores[1] += facade.getShowScore(crib, starter.getFirst());
 	updateScore(1);
-=======
-<<<<<<< Updated upstream
-=======
+
 	
 	System.out.println("sum: "+run.getScore(startingHands[0], starter.getFirst()));
 	scores[1] += facade.getShowScore(crib, starter.getFirst());
 	updateScore(1);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+	*/
 }
 
   public Cribbage()
@@ -361,7 +359,7 @@ void showHandsCrib() {
     refresh();
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) 
 		  throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException,
 		  	InstantiationException, IllegalAccessException {
 	  /* Handle Properties */
