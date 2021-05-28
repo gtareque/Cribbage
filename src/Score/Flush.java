@@ -54,12 +54,12 @@ public class Flush implements ScoringStrategy {
 					num = FFIVE;
 					prevScore += points;
 					log.logScore(points, getType(), prevScore, comboHand);
-					return points;
+					return prevScore;
 				}
 			}
 		}
 	
-		return points;
+		return prevScore;
 	}
 	
 	public String getType() {

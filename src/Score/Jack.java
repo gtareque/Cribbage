@@ -46,7 +46,7 @@ public class Jack implements ScoringStrategy {
 			
 			log.logScore(points, getType(), prevScore, comboHand);
 		}
-		return points;
+		return prevScore;
 	}
 	
 	public String getType() {

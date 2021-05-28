@@ -278,6 +278,7 @@ private void play() {
 			transfer(nextCard, s.segment);
 			log.logPlay(total(s.segment), nextCard);
 			scores[s.lastPlayer] = facade.getPlayScore(s.segment, null, scores[s.lastPlayer]);
+			updateScore(s.lastPlayer);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
 				scores[s.lastPlayer] += 2;

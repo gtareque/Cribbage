@@ -69,7 +69,7 @@ public class Runs implements ScoringStrategy {
 			sequenceEnd = size = uniqueCards.size();
           	
           	if (size < RUNTHREE) {
-				return score;
+				return prevScore;
 			}
           	
           	
