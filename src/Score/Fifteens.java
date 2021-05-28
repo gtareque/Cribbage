@@ -18,10 +18,9 @@ public class Fifteens implements ScoringStrategy {
 			
 		} else {
 			// show strategy
-			
 			ArrayList<Card> cards = hand.getCardList();
-			cards.add(card);
 			
+			cards.add(card);
 			// combos stores all possible card combinations for fifteen
 			ArrayList<Integer> combos = new ArrayList<Integer>();
 			ArrayList<ArrayList<Card>> possibleCardCombo = new ArrayList<ArrayList<Card>>();
@@ -85,6 +84,8 @@ public class Fifteens implements ScoringStrategy {
 					}
 				}
 			}
+			
+			System.out.println(successCardCombo);
 			for(int i = 0; i < successCardCombo.size(); i++) {
 				
 				Hand comboHand = new Hand(log.getDeck());

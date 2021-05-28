@@ -326,6 +326,7 @@ void showHandsCrib(Hand[] clonedHandsArray) {
 	}
 	log.setCurrentPlayer(DEALER);
 	log.logShow(starter, clonedHandsArray[DEALER]);
+	
 	scores[DEALER] = facade.getShowScore(clonedHandsArray[DEALER], starter.getFirst(), scores[DEALER]);
 	log.logShow(starter, crib);
 	scores[DEALER] = facade.getShowScore(crib, starter.getFirst(), scores[DEALER]);

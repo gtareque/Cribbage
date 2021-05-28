@@ -89,6 +89,8 @@ public class Pairs implements ScoringStrategy {
 					num = 2;
 					log.logScore(score, getType(), total, pair[i]);
 				}
+			} else {
+				hand.remove(card, false);
 			}
 			
 
