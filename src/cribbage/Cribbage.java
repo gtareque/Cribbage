@@ -57,7 +57,7 @@ public class Cribbage extends CardGame {
   }
 
 	static boolean ANIMATE;
-	private static final int DEALER = 0;
+	private static final int DEALER = 1;
 
 	void transfer(Card c, Hand h) {
 		if (ANIMATE) {
@@ -225,6 +225,17 @@ class Segment {
 		}
 }
 
+Hand[] cloneHand() {
+	Hand [] startingHands = new Hand[hands.length];
+	for (int i = 0; i < nPlayers; i++) {
+		  startingHands[i] = new Hand(deck);
+		  for (Card C: hands[i].getCardList()) {
+			  startingHands[i].insert(C.getSuit(), C.getRank(), false);
+		  }
+	  }
+	return startingHands;
+}
+
 private void play() {
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
 	final int thirtyone = 31;
@@ -235,16 +246,21 @@ private void play() {
 	s.reset(segments);
 	Log log = Log.getInstance();
 	log.setPlayType(true);
+	if(starter.getFirst().getRank() == Rank.JACK) {
+		scores[DEALER] += 2;
+		log.logScore(2, "starter",scores[DEALER]);
+	}
 	while (!(players[0].emptyHand() && players[1].emptyHand())) {
 		// System.out.println("segments.size() = " + segments.size());
-		log.setCurrentPlayer(currentPlayer);
+		
 		Card nextCard = players[currentPlayer].lay(thirtyone-total(s.segment));
 		if (nextCard == null) {
 			if (s.go) {
 				// Another "go" after previous one with no intervening cards
 				// lastPlayer gets 1 point for a "go"
+				log.setCurrentPlayer(s.lastPlayer);
 				scores[s.lastPlayer] += 1;
-//				log.logScore(1, "go",scores[s.lastPlayer]);
+				log.logScore(1, "go",scores[s.lastPlayer]);
 				s.newSegment = true;
 				updateScore(s.lastPlayer);
 			} else {
@@ -253,13 +269,16 @@ private void play() {
 			}
 			currentPlayer = (currentPlayer+1) % 2;
 		} else {
+			log.setCurrentPlayer(currentPlayer);
 			
 			s.lastPlayer = currentPlayer; // last Player to play a card in this segment
 			transfer(nextCard, s.segment);
+			log.logPlay(total(s.segment), nextCard);
 			scores[s.lastPlayer] = facade.getPlayScore(s.segment, null, scores[s.lastPlayer]);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
 				scores[s.lastPlayer] += 2;
+				log.logScore(2, "thirtyone",scores[s.lastPlayer]);
 				updateScore(s.lastPlayer);
 				s.newSegment = true;
 				currentPlayer = (currentPlayer+1) % 2;
@@ -267,6 +286,7 @@ private void play() {
 				// if total(segment) == 15, lastPlayer gets 2 points for a 15
 				if(total(s.segment) == FIFTEEN) {
 					scores[s.lastPlayer] += 2;
+					log.logScore(2, "fifteen",scores[s.lastPlayer]);
 					updateScore(s.lastPlayer);
 				}
 				if (!s.go) { // if it is "go" then same player gets another turn
@@ -286,23 +306,30 @@ private void play() {
 	}
 }
 
-void showHandsCrib() {
+void showHandsCrib(Hand[] clonedHandsArray) {
 	// score player 0 (non dealer)
 	// score player 1 (dealer)
 	// score crib (for dealer)
-//	Log log = Log.getInstance();
-//	log.setPlayType(false);
-//	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
-//	for(int i = 0; i < nPlayers; i++) {
-//		log.setCurrentPlayer(i);
-//		if(i == 0) {
-//			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
-//			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
-//		} else {
-//			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
-//		}
-//		updateScore(i);
-//	}
+	Log log = Log.getInstance();
+	
+	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
+	for(int i = 0; i < nPlayers; i++) {
+		if( i == 1) {
+			continue;
+		}
+		log.setCurrentPlayer(i);
+		log.logShow(starter, clonedHandsArray[i]);
+		scores[i] = facade.getShowScore(clonedHandsArray[i], starter.getFirst(), scores[i]);
+		
+		
+		updateScore(i);
+	}
+	log.setCurrentPlayer(DEALER);
+	log.logShow(starter, clonedHandsArray[DEALER]);
+	scores[DEALER] = facade.getShowScore(clonedHandsArray[DEALER], starter.getFirst(), scores[DEALER]);
+	log.logShow(starter, crib);
+	scores[DEALER] = facade.getShowScore(crib, starter.getFirst(), scores[DEALER]);
+	updateScore(DEALER);
 }
 
   public Cribbage()
@@ -336,9 +363,11 @@ void showHandsCrib() {
 	  }
 	  discardToCrib();
 	  starter(pack);
-	  log.logStarter(pack.getFirst());
+	  Hand []clonedHandsArray = cloneHand();
 	  play();
-	  showHandsCrib();
+	 
+	  showHandsCrib(clonedHandsArray);
+	  
 
     addActor(new Actor("sprites/gameover.gif"), textLocation);
     setStatusText("Game over.");

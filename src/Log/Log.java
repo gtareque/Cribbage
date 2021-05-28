@@ -92,6 +92,11 @@ public class Log {
 		   pw.flush();
 	   }
 	   
+	   public void logShow(Hand starter, Hand other) {
+		   pw.printf("show,P%d,%s+%s\n", currentPlayer, canonical(starter.getFirst()), canonical(other));
+		   pw.flush();
+	   }
+	   
 	   public void logScore(int score,  String type, int prevScore, Hand hand) {
 		   pw.printf("score,P%d,%d,%d,%s,%s\n", currentPlayer, prevScore,  score, type, canonical(hand));
 		   pw.flush();
@@ -132,5 +137,8 @@ public class Log {
 
 		public void setDeck(Deck deck) {
 			this.deck = deck;
+		}
+		public Deck getDeck() {
+			return deck;
 		}
 }	

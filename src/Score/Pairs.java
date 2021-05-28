@@ -15,6 +15,7 @@ public class Pairs implements ScoringStrategy {
 	// go backwards in segment to see if same rank
 	@Override
 	public int getScore(Hand hand, Card card, int prevScore) {
+		
 		int score = 0;
 		int total = prevScore;
 		Log log = Log.getInstance();
