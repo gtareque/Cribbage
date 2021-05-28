@@ -206,7 +206,7 @@ private void starter(Hand pack) {
 	dealt.setVerso(false);
 	transfer(dealt, starter);
 	for (Card c: starter.getCardList()) {
-		System.out.println(c.getRankId());
+		System.out.println(c.getRank());
 	}
 }
 
@@ -284,17 +284,12 @@ private void play() {
 					currentPlayer = (currentPlayer+1) % 2;
 				}
 			}
-			/* apply rules of play */
-//			for(int i = 0; i < nPlayers; i++) {
-//				scores[s.lastPlayer] += facade.getPlayScore(players[i].getHand(), null, nextCard);
-//				updateScore(i);
-//			}
-//			int n = facade.getPlayScore();
+
 		}
 		/* get score from the factory */
 		System.out.println("test");
-		Pairs pair = new Pairs();
-		System.out.println("Sum: "+pair.getScore(s.segment, null));
+		Runs run = new Runs();
+		System.out.println("Sum: "+run.getScore(s.segment, null));
 		if (s.newSegment) {
 			
 			segments.add(s.segment);
@@ -346,7 +341,7 @@ void showHandsCrib() {
 	  starter(pack);
 	  cloneHand();
 	  play();
-	  showHandsCrib();
+//	  showHandsCrib();
 	  
     addActor(new Actor("sprites/gameover.gif"), textLocation);
     setStatusText("Game over.");

@@ -23,18 +23,27 @@ public class Fifteens implements ScoringStrategy {
 			
 			// combos stores all possible card combinations for fifteen
 			ArrayList<Integer> combos = new ArrayList<Integer>();
+			ArrayList<ArrayList<Card>> possibleCardCombo = new ArrayList<ArrayList<Card>>();
+			ArrayList<ArrayList<Card>> successCardCombo = new ArrayList<ArrayList<Card>>();
 			
 			for (int i = 1; i < cards.size(); i++) {
 				Rank rank = (Rank) cards.get(i).getRank();
+				
 				
 				if (i == 1) { // start combos list
 					Rank r = (Rank) cards.get(0).getRank();
 					int sum = rank.value + r.value;
 					
+					ArrayList<Card> cardCombo = new ArrayList<Card>(); 
+					cardCombo.add(cards.get(i));
+					cardCombo.add(cards.get(0));
+					
 					if (sum < FIFTEEN) {
 						combos.add(sum);
+						possibleCardCombo.add(cardCombo);
 					} else if (sum == FIFTEEN) {
 						points += 2;
+						successCardCombo.add(cardCombo);
 					} 
 				} else {
 					if (!combos.isEmpty()) {
@@ -43,10 +52,15 @@ public class Fifteens implements ScoringStrategy {
 							int combo = combos.get(j);
 							int sum = rank.value + combo;
 							
+							ArrayList<Card> cardCombo = (ArrayList<Card>) (possibleCardCombo.get(j)).clone();
+							cardCombo.add(cards.get(i));
+							
 							if (sum < FIFTEEN) {
 								combos.add(sum);
+								possibleCardCombo.add(cardCombo);
 							} else if (sum == FIFTEEN) {
 								points += 2;
+								successCardCombo.add(cardCombo);
 							} 
 						}
 					}
@@ -56,10 +70,16 @@ public class Fifteens implements ScoringStrategy {
 						Rank r = (Rank) cards.get(j).getRank();
 						int sum = rank.value + r.value;
 						
+						ArrayList<Card> cardCombo = new ArrayList<Card>(); 
+						cardCombo.add(cards.get(i));
+						cardCombo.add(cards.get(j));
+						
 						if (sum < FIFTEEN) {
 							combos.add(sum);
+							possibleCardCombo.add(cardCombo);
 						} else if (sum == FIFTEEN) {
 							points += 2;
+							successCardCombo.add(cardCombo);
 						} 
 					}
 				}

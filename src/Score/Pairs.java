@@ -13,49 +13,54 @@ public class Pairs implements ScoringStrategy {
 	public int getScore(Hand hand, Card card) {
 		int score = 0;
 		// TODO Auto-generated method stub
+		
+		
 		int pairs = 0, trips = 0, quads = 0, firstcard = 0;
 		
-		if (card == null) {
-			ArrayList<Card> cards = hand.getCardList();
-			int size = cards.size();
-			Rank prevrank = null;
-			
-			for (int i = size-1; i > 0; i--) {
-				// get first card
-				if (firstcard == 0) {
-					prevrank = (Rank) cards.get(i).getRank();
-					firstcard = 1;
-					continue;
-				}
-				Rank rank = (Rank) cards.get(i).getRank();
-				
-				if (pairs == 0) {
-					if (rank.order == prevrank.order) {
-						pairs = 1;
-						score = PAIRS;
-					}
-				}
-				
-				else if (pairs == 1 && trips == 0) {
-					if (rank.order == prevrank.order) {
-						trips = 1;
-						score = TRIPS;
-					}
-				}
-				
-				else if (pairs == 1 && trips == 1) {
-					if (rank.order == prevrank.order) {
-						quads = 1;
-						score = QUADS;
-						break;
-					}
-				}
-				prevrank = rank;
-				
-			}
+        if (card == null) {
+            ArrayList<Card> cards = hand.getCardList();
+            int size = cards.size();
+            Rank prevrank = null;
+            
+            for (int i = size-1; i > 0; i--) {
+                // get first card
+                if (firstcard == 0) {
+                    prevrank = (Rank) cards.get(i).getRank();
+                    firstcard = 1;
+                    continue;
+                }
+                Rank rank = (Rank) cards.get(i).getRank();
+                
+                if (pairs == 0 && rank.order == prevrank.order) {
+                    pairs = 1;
+                    score = PAIRS;
+                    
+                }
+                
+                else if (pairs == 1 && trips == 0) {
+                    if (rank.order == prevrank.order) {
+                        trips = 1;
+                        score = TRIPS;
+                    }
+                }
+                
+                else if (pairs == 1 && trips == 1) {
+                    if (rank.order == prevrank.order) {
+                        quads = 1;
+                        score = QUADS;
+                        break;
+                    }
+                }
+                else {
+                    break;
+                }
+                prevrank = rank;
+                
+            }
 			
 		} else {
-			
+			// show strategy
+			 
 			hand.insert(card, false);
 
 			Hand[] quad = hand.extractQuads();
