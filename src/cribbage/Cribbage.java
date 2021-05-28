@@ -244,6 +244,7 @@ private void play() {
 				// Another "go" after previous one with no intervening cards
 				// lastPlayer gets 1 point for a "go"
 				scores[s.lastPlayer] += 1;
+//				log.logScore(1, "go",scores[s.lastPlayer]);
 				s.newSegment = true;
 				updateScore(s.lastPlayer);
 			} else {
@@ -289,19 +290,19 @@ void showHandsCrib() {
 	// score player 0 (non dealer)
 	// score player 1 (dealer)
 	// score crib (for dealer)
-	Log log = Log.getInstance();
-	log.setPlayType(false);
-	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
-	for(int i = 0; i < nPlayers; i++) {
-		log.setCurrentPlayer(i);
-		if(i == 0) {
-			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
-			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
-		} else {
-			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
-		}
-		updateScore(i);
-	}
+//	Log log = Log.getInstance();
+//	log.setPlayType(false);
+//	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
+//	for(int i = 0; i < nPlayers; i++) {
+//		log.setCurrentPlayer(i);
+//		if(i == 0) {
+//			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
+//			scores[i] = facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
+//		} else {
+//			scores[i] += facade.getShowScore(players[i].getHand(), starter.getFirst(), scores[i]);
+//		}
+//		updateScore(i);
+//	}
 }
 
   public Cribbage()

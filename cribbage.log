@@ -5,5 +5,4 @@ deal,P1,[AD,AH,TD,JS,QH,KC]
 discard,P2,[2C,QC]
 discard,P2,[JS,KC]
 starter,AC
-score,P1,2,2,pair1
-score,P1,4,2,pair1
+score,P1,4,4,pair2

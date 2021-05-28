@@ -24,60 +24,24 @@ public class Pairs implements ScoringStrategy {
 		if (card == null) {
 			ArrayList<Card> cards = hand.getCardList();
 			int size = cards.size();
-//			Rank prevrank = null;
-//			
-//			for (int i = size-1; i > 0; i--) {
-//				// get first card
-//				if (firstcard == 0) {
-//					prevrank = (Rank) cards.get(i).getRank();
-//					firstcard = 1;
-//					continue;
-//				}
-//				Rank rank = (Rank) cards.get(i).getRank();
-//				
-//				if (pairs == 0) {
-//					if (rank.order == prevrank.order) {
-//						pairs = 1;
-//						score = PAIRS;
-//						num =2;
-//					}
-//				}
-//				
-//				else if (pairs == 1 && trips == 0) {
-//					if (rank.order == prevrank.order) {
-//						trips = 1;
-//						score = TRIPS;
-//						num = 3;
-//					}
-//				}
-//				
-//				else if (pairs == 1 && trips == 1) {
-//					if (rank.order == prevrank.order) {
-//						quads = 1;
-//						score = QUADS;
-//						num = 4;
-//						break;
-//					}
-//				}
-//				prevrank = rank;
-//				
-//			}
-			num = 1;
-			Card playedCard = cards.get(cards.size() - 1);
-			for(int i = 0; i < cards.size() - 1; i++) {
-				if(cards.get(i).getRank() == playedCard.getRank()) {
+			if(size > 1) {
+				num = 1;
+				Card playedCard = cards.get(cards.size() - 1);
+				int i = cards.size() - 2;
+				
+				while (( i >=0) && cards.get(i).getRank() == playedCard.getRank() && ( i >=0)) {
 					num++;
+					if(num == 4) {
+						break;
+					}
+					i--;
 				}
-				if(num == 4) {
-					break;
+				if(num == 2 || num == 3) {
+					score = num * PAIRS;
+				} else if(num == 4){
+					score = QUADS;
 				}
 			}
-			if(num == 2 || num == 3) {
-				score = num *2;
-			} else {
-				score = 12;
-			}
-			score = num * 2;
 			total += score;
 			if(score > 0 ) {
 				log.logScore(score, getType(), total);
@@ -107,6 +71,15 @@ public class Pairs implements ScoringStrategy {
 					num = 3;
 					log.logScore(score, getType(), total, trip[i]);
 				}
+				/* FIVE CARDS SO TRIP CAN ALSO HAVE PAIR */
+				if (pair.length != 0) {
+					for(int i = 0; i < pair.length; i++) {
+						score += PAIRS;
+						total += score;
+						num = 2;
+						log.logScore(score, getType(), total, pair[i]);
+					}
+				}
 			}
 			else if (pair.length != 0) {
 				for(int i = 0; i < pair.length; i++) {
@@ -119,6 +92,7 @@ public class Pairs implements ScoringStrategy {
 			
 
 		}
+		
 		
 		
 		
