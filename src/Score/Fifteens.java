@@ -84,7 +84,18 @@ public class Fifteens implements ScoringStrategy {
 					}
 				}
 			}
+			
+			for (int i = 0; i < successCardCombo.size(); i++) {
+				ArrayList<Card> test = new ArrayList<Card>();
+				
+				for (int j = 0; j < successCardCombo.get(i).size(); j++) {
+					test.add(successCardCombo.get(i).get(j).clone());
+				}
+				System.out.println(test);
+			}
+		
 		}
+		
 		
 		
 		return points;

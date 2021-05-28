@@ -305,7 +305,8 @@ void showHandsCrib() {
 	// score crib (for dealer)
 	
 	ScoreUpdaterFacade facade = new ScoreUpdaterFacade();
-	Runs run = new Runs();
+	Fifteens fifteen = new Fifteens();
+	System.out.println("Fifteen points: " + fifteen.getScore(startingHands[0], starter.getFirst()));
 	for(int i = 0; i < nPlayers; i++) {
 		if(i == 0) {
 			scores[i] += facade.getShowScore(startingHands[i], starter.getFirst());
@@ -341,7 +342,7 @@ void showHandsCrib() {
 	  starter(pack);
 	  cloneHand();
 	  play();
-//	  showHandsCrib();
+	  showHandsCrib();
 	  
     addActor(new Actor("sprites/gameover.gif"), textLocation);
     setStatusText("Game over.");
