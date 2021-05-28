@@ -186,7 +186,7 @@ private void discardToCrib() {
 //		tempCrib.sort(Deck.cards);;
 //		
 		tempHand.sort(Hand.SortType.POINTPRIORITY, true);
-		log.logCrib(tempHand, nPlayers);
+		log.logCrib(tempHand, player.id);
 		crib.sort(Hand.SortType.POINTPRIORITY, true);
 		
 	}
@@ -199,8 +199,11 @@ private void starter(Hand pack) {
 	starter.setView(this, layout);
 	starter.draw();
 	Card dealt = randomCard(pack);
+	Log log = Log.getInstance();
+	log.logStarter(dealt);
 	dealt.setVerso(false);
 	transfer(dealt, starter);
+	
 }
 
 int total(Hand hand) {
@@ -275,6 +278,7 @@ private void play() {
 			transfer(nextCard, s.segment);
 			log.logPlay(total(s.segment), nextCard);
 			scores[s.lastPlayer] = facade.getPlayScore(s.segment, null, scores[s.lastPlayer]);
+			updateScore(s.lastPlayer);
 			if (total(s.segment) == thirtyone) {
 				// lastPlayer gets 2 points for a 31
 				scores[s.lastPlayer] += 2;
@@ -292,10 +296,17 @@ private void play() {
 				if (!s.go) { // if it is "go" then same player gets another turn
 					currentPlayer = (currentPlayer+1) % 2;
 				}
+				
+				if (players[(currentPlayer+1) % 2].emptyHand() && players[currentPlayer].emptyHand()) {
+					log.setCurrentPlayer(s.lastPlayer);
+					scores[s.lastPlayer] += 1;
+					log.logScore(1, "go",scores[s.lastPlayer]);
+					s.newSegment = true;
+					updateScore(s.lastPlayer);
+				}
 			}
 
 		}
-		/* get score from the factory */
 		
 		
 		if (s.newSegment) {
@@ -363,6 +374,10 @@ void showHandsCrib(Hand[] clonedHandsArray) {
 	  }
 	  discardToCrib();
 	  starter(pack);
+	  if(starter.getFirst().getRank() == Rank.JACK) {
+		  scores[DEALER] += 2;
+		  log.logScore(2, "starter", scores[DEALER]);
+	  }
 	  Hand []clonedHandsArray = cloneHand();
 	  play();
 	 
@@ -415,6 +430,7 @@ void showHandsCrib(Hand[] clonedHandsArray) {
 	  players[1] = (IPlayer) clazz.getConstructor().newInstance();
 	  // End properties
 	  Log log = Log.getInstance();
+	  log.logSeed(SEED);
 	  log.logPlayers(cribbageProperties);
 	  new Cribbage();
   }

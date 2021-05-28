@@ -14,13 +14,27 @@ public class Flush implements ScoringStrategy {
 		// TODO Auto-generated method stub
 		int points = 0;
 		Log log = Log.getInstance();
+		
+		//clone hand
+		Hand cloneHand = new Hand(log.getDeck());
+		for(Card c: hand.getCardList()) {
+			cloneHand.insert(c.getSuit(), c.getRank(), false);
+		}
+		
+		System.out.println(getType());
+		System.out.println("legit");
+		System.out.println(hand);
+		System.out.println("peasant clone");
+		System.out.println(cloneHand);
+		
 		if (card == null) {
 			// play strategy
 		} else {
 			for (Suit s: Suit.values()) {
 				Hand comboHand = new Hand(log.getDeck());
 				
-				ArrayList<Card> cards = hand.getCardsWithSuit(s);
+				ArrayList<Card> cards = cloneHand.getCardsWithSuit(s);
+				
 				for(Card c: cards) {
 					comboHand.insert(c.clone(), false);
 				}
@@ -45,7 +59,7 @@ public class Flush implements ScoringStrategy {
 			}
 		}
 	
-		return points;
+		return prevScore;
 	}
 	
 	public String getType() {
