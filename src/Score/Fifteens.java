@@ -13,14 +13,27 @@ public class Fifteens implements ScoringStrategy {
 	public int getScore(Hand hand, Card card, int prevScore) {
 		int points = 0;
 		Log log = Log.getInstance();
+		
+		//clone hand
+		Hand cloneHand = new Hand(log.getDeck());
+		for(Card c: hand.getCardList()) {
+			cloneHand.insert(c.getSuit(), c.getRank(), false);
+		}
+		
 		if (card == null) {
 			//play strategy
 	
 		} else {
 			// show strategy
 			
-			ArrayList<Card> cards = hand.getCardList();
+			ArrayList<Card> cards = cloneHand.getCardList();
 			cards.add(card);
+			
+			System.out.println(getType());
+			System.out.println("legit");
+			System.out.println(hand);
+			System.out.println("peasant clone");
+			System.out.println(cloneHand);
 			
 			// combos stores all possible card combinations for fifteen
 			ArrayList<Integer> combos = new ArrayList<Integer>();
@@ -95,6 +108,8 @@ public class Fifteens implements ScoringStrategy {
 				prevScore += 2;
 				log.logScore(2, getType(), prevScore, comboHand);
 			}
+			
+			
 		}
 		
 		
@@ -103,7 +118,7 @@ public class Fifteens implements ScoringStrategy {
 	}
 	
 	public String getType() {
-		return "fifteens";
+		return "fifteen";
 	}
 
 }

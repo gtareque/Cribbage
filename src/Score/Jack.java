@@ -14,10 +14,22 @@ public class Jack implements ScoringStrategy {
 		int points = 0;
 		Log log = Log.getInstance();
 		Hand comboHand = new Hand(log.getDeck());
+		
+		Hand cloneHand = new Hand(log.getDeck());
+		for(Card c: hand.getCardList()) {
+			cloneHand.insert(c.getSuit(), c.getRank(), false);
+		}
+		
+		System.out.println(getType());
+		System.out.println("legit");
+		System.out.println(hand);
+		System.out.println("peasant clone");
+		System.out.println(cloneHand);
+		
 		if (card == null) {
 			
 		} else {
-			ArrayList<Card> results = hand.getCardsWithRank(r);
+			ArrayList<Card> results = cloneHand.getCardsWithRank(r);
 			comboHand.insert(card.clone(), false);
 			if (!results.isEmpty()) {
 				for (int i = 0; i < results.size(); i++) {

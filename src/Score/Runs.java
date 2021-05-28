@@ -23,10 +23,22 @@ public class Runs implements ScoringStrategy {
 	public int getScore(Hand hand, Card card, int prevScore) {
 		Log log = Log.getInstance();
         int score = 0, maxOrder = 0, minOrder = 14, sequenceMin, sequenceMax, sequenceEnd;
+        
+		Hand cloneHand = new Hand(log.getDeck());
+		for(Card c: hand.getCardList()) {
+			cloneHand.insert(c.getSuit(), c.getRank(), false);
+		}
+		
+		System.out.println(getType());
+		System.out.println("legit");
+		System.out.println(hand);
+		System.out.println("peasant clone");
+		System.out.println(cloneHand);
+		
 		if (card == null) {
 			// play strategy
 			
-          	ArrayList<Card> cards = hand.getCardList();
+          	ArrayList<Card> cards = cloneHand.getCardList();
           	ArrayList<Integer> uniqueCards = new ArrayList<Integer>();
 			int size = cards.size();
 			
@@ -83,6 +95,7 @@ public class Runs implements ScoringStrategy {
               		}
               	}
               	
+              	// Checks that the unique cards are within the sequence range.
               	for (int i = 0; i < size; i++) {
               		int order = uniqueCards.get(i);
               		
@@ -93,6 +106,7 @@ public class Runs implements ScoringStrategy {
               		sequenceEnd = 0;
               	}
               	
+              	// A card is an obstacle. Remove it and cards after it.
               	if (sequenceEnd != 0) {
               		for (int i = size - 1; i >= sequenceEnd; i--) {
               			uniqueCards.remove(i);
@@ -132,11 +146,11 @@ public class Runs implements ScoringStrategy {
 
 		} else {
 			
-			hand.insert(card, false);
+			cloneHand.insert(card, false);
 			
-			Hand[] penta = hand.extractSequences(RUNFIVE);
-			Hand[] quad = hand.extractSequences(RUNFOUR);
-			Hand[] trip = hand.extractSequences(RUNTHREE);
+			Hand[] penta = cloneHand.extractSequences(RUNFIVE);
+			Hand[] quad = cloneHand.extractSequences(RUNFOUR);
+			Hand[] trip = cloneHand.extractSequences(RUNTHREE);
 			
 			if (penta.length != 0) {
 				for(int i = 0; i < penta.length; i++) {

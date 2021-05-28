@@ -48,6 +48,9 @@ public class Log {
 	        return single_instance;
 	    }
 	    
+	    public void logSeed(int seed) throws IOException {
+	    	pw.printf("seed,%d\n", seed);
+	    }
 	    
 	    public void logPlayers(Properties properties) throws IOException {
 	    	

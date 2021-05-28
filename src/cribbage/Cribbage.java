@@ -186,7 +186,7 @@ private void discardToCrib() {
 //		tempCrib.sort(Deck.cards);;
 //		
 		tempHand.sort(Hand.SortType.POINTPRIORITY, true);
-		log.logCrib(tempHand, nPlayers);
+		log.logCrib(tempHand, player.id);
 		crib.sort(Hand.SortType.POINTPRIORITY, true);
 		
 	}
@@ -199,8 +199,11 @@ private void starter(Hand pack) {
 	starter.setView(this, layout);
 	starter.draw();
 	Card dealt = randomCard(pack);
+	Log log = Log.getInstance();
+	log.logStarter(dealt);
 	dealt.setVerso(false);
 	transfer(dealt, starter);
+	
 }
 
 int total(Hand hand) {
@@ -415,6 +418,7 @@ void showHandsCrib(Hand[] clonedHandsArray) {
 	  players[1] = (IPlayer) clazz.getConstructor().newInstance();
 	  // End properties
 	  Log log = Log.getInstance();
+	  log.logSeed(SEED);
 	  log.logPlayers(cribbageProperties);
 	  new Cribbage();
   }

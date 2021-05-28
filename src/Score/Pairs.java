@@ -22,8 +22,14 @@ public class Pairs implements ScoringStrategy {
 		// TODO Auto-generated method stub
 		int pairs = 0, trips = 0, quads = 0, firstcard = 0;
 		
+		//clone hand
+		Hand cloneHand = new Hand(log.getDeck());
+		for(Card c: hand.getCardList()) {
+			cloneHand.insert(c.getSuit(), c.getRank(), false);
+		}
+		
 		if (card == null) {
-			ArrayList<Card> cards = hand.getCardList();
+			ArrayList<Card> cards = cloneHand.getCardList();
 			int size = cards.size();
 			if(size > 1) {
 				num = 1;
@@ -37,8 +43,10 @@ public class Pairs implements ScoringStrategy {
 					}
 					i--;
 				}
-				if(num == 2 || num == 3) {
-					score = num * PAIRS;
+				if(num == 2) {
+					score = PAIRS;
+				} else if (num == 3) {
+					score = TRIPS;
 				} else if(num == 4){
 					score = QUADS;
 				}
@@ -51,11 +59,17 @@ public class Pairs implements ScoringStrategy {
 			
 		} else {
 			
-			hand.insert(card, false);
+			cloneHand.insert(card, false);
 			
-			Hand[] quad = hand.extractQuads();
-			Hand[] trip = hand.extractTrips();
-			Hand[] pair = hand.extractPairs();
+			System.out.println(getType());
+			System.out.println("legit");
+			System.out.println(hand);
+			System.out.println("peasant clone");
+			System.out.println(cloneHand);
+			
+			Hand[] quad = cloneHand.extractQuads();
+			Hand[] trip = cloneHand.extractTrips();
+			Hand[] pair = cloneHand.extractPairs();
 			
 			if (quad.length != 0) {
 				for(int i = 0; i < quad.length; i++) {
@@ -89,11 +103,7 @@ public class Pairs implements ScoringStrategy {
 					num = 2;
 					log.logScore(score, getType(), total, pair[i]);
 				}
-			}else {
-				hand.remove(card, false);
 			}
-			
-
 		}
 		
 		
