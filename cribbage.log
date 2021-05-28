@@ -17,6 +17,8 @@ play,P1,20,TD
 show,P0,8H+[2H,7C,QD,KH]
 score,P0,2,2,fifteens,[7C,8H]
 score,P0,4,2,fifteens,[7C,8H]
+score,P0,8,4,flush0,[2H,8H,KH]
 show,P1,8H+[AD,AH,TD,QH]
 score,P1,8,2,pair2,[AD,AH]
+score,P1,12,4,flush0,[AH,8H,QH]
 show,P1,8H+[2C,JS,QC,KC]

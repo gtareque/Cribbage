@@ -15,7 +15,7 @@ public class Fifteens implements ScoringStrategy {
 		Log log = Log.getInstance();
 		if (card == null) {
 			//play strategy
-			
+	
 		} else {
 			// show strategy
 			

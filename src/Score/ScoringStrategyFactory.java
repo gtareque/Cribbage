@@ -14,6 +14,7 @@ public class ScoringStrategyFactory {
 			case "SHOW":
 				composite.addStrategy(new Pairs());
 				composite.addStrategy(new Fifteens());
+				composite.addStrategy(new Flush());
 				break;
 		}
 		return composite;
