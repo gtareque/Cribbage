@@ -16,9 +16,10 @@ play,P1,31,AH
 score,P1,4,2,thirtyone
 play,P0,10,KH
 play,P1,20,TD
+score,P1,5,1,go
 show,P0,8H+[2H,7C,QD,KH]
 score,P0,2,2,fifteen,[7C,8H]
 show,P1,8H+[AD,AH,TD,QH]
-score,P1,6,2,pair2,[AD,AH]
+score,P1,7,2,pair2,[AD,AH]
 show,P1,8H+[2C,JS,QC,KC]
-score,P1,9,3,run3,[JS,QC,KC]
+score,P1,10,3,run3,[JS,QC,KC]

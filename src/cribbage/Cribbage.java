@@ -296,10 +296,17 @@ private void play() {
 				if (!s.go) { // if it is "go" then same player gets another turn
 					currentPlayer = (currentPlayer+1) % 2;
 				}
+				
+				if (players[(currentPlayer+1) % 2].emptyHand() && players[currentPlayer].emptyHand()) {
+					log.setCurrentPlayer(s.lastPlayer);
+					scores[s.lastPlayer] += 1;
+					log.logScore(1, "go",scores[s.lastPlayer]);
+					s.newSegment = true;
+					updateScore(s.lastPlayer);
+				}
 			}
 
 		}
-		/* get score from the factory */
 		
 		
 		if (s.newSegment) {
